@@ -1,0 +1,215 @@
+.item {
+  display: grid;
+  grid-template-columns: 60px 1fr 2fr 100px;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.teamInfo {
+  display: contents;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-color: #FF6B35;
+}
+
+.clickable:focus {
+  outline: none;
+  border-color: #FF6B35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.clickable:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.first {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-color: #FFD700;
+  color: #8B4513;
+}
+
+.second {
+  background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+  border-color: #C0C0C0;
+  color: #2F4F4F;
+}
+
+.third {
+  background: linear-gradient(135deg, #CD7F32 0%, #B8860B 100%);
+  border-color: #CD7F32;
+  color: white;
+}
+
+.rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rankNumber {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.medal {
+  font-size: 1.2rem;
+}
+
+.teamName {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #8B4513;
+}
+
+.first .name,
+.second .name,
+.third .name {
+  color: inherit;
+}
+
+.members {
+  display: flex;
+  align-items: center;
+}
+
+.membersList {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.first .membersList,
+.second .membersList,
+.third .membersList {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.pointsValue {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #D2691E;
+}
+
+.first .pointsValue,
+.second .pointsValue,
+.third .pointsValue {
+  color: inherit;
+}
+
+.pointsLabel {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+
+@media (max-width: 768px) {
+  .item {
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+    align-items: start;
+  }
+
+  .teamInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .rank {
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-self: center;
+  }
+
+  .rankNumber {
+    font-size: 1.4rem;
+  }
+
+  .medal {
+    font-size: 1.1rem;
+  }
+
+  .teamName {
+    margin-bottom: 0;
+  }
+
+  .name {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .members {
+    margin-bottom: 0;
+  }
+
+  .membersList {
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .points {
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .pointsValue {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .pointsLabel {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 480px) {
+  .item {
+    padding: 1rem;
+  }
+
+  .name {
+    font-size: 1rem;
+  }
+
+  .pointsValue {
+    font-size: 1.2rem;
+  }
+
+  .membersList {
+    font-size: 0.85rem;
+  }
+}

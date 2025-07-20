@@ -1,0 +1,40 @@
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+  font-family: 'Arial', sans-serif;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+  margin: 2rem auto;
+  max-width: 400px;
+}
+
+.error {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #fff;
+  background: rgba(220, 53, 69, 0.8);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 2rem auto;
+  max-width: 500px;
+  border: 2px solid #dc3545;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 1rem;
+  }
+}
