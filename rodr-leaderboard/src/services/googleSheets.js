@@ -35,29 +35,69 @@ export const fetchChallengesData = async () => {
  */
 export const fetchTeamsData = async () => {
   try {
-    // First, try to get sheet metadata to discover team tabs
     const sheetsMetadata = await getSheetMetadata();
-    
-    if (sheetsMetadata && sheetsMetadata.length > 0) {
-      const teamsData = [];;
-      
-      // Fetch data for each discovered team sheet
-      for (const sheetInfo of sheetsMetadata) {
-        try {
-          const teamData = await fetchSingleTeamData(sheetInfo)
-          if (teamData) {
-            teamsData.push(teamData)
-          }
-        } catch (teamError) {
-          console.warn(`Failed to fetch data for team ${sheetInfo.name}:`, teamError)
-        }
+
+    const queryParams = [];
+    const teamNames = [];
+    const teamGids = [];
+    for (const sheetInfo of sheetsMetadata) {
+      if (!sheetInfo?.name?.startsWith('TEAM ')) {
+        teamNames.push(sheetInfo.name);
+        teamGids.push(sheetInfo.gid);
+        const team = encodeURIComponent(sheetInfo.name);
+        const scoreRange = `${team}!D83`;
+        const membersRange = `${team}!K3:K6`;
+        const mainChallenges = `${team}!D7:D39`;
+        const xtraChallenges = `${team}!D46:D81`;
+
+        const queryStr = [`ranges=${scoreRange}&`,
+        `ranges=${membersRange}`,
+        `ranges=${mainChallenges}`,
+        `ranges=${xtraChallenges}`].join('&')
+        queryParams.push(queryStr);
       }
-      
-      // Sort teams by total points (descending)
-      teamsData.sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0))
-      
-      return teamsData
     }
+
+    const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?`
+    const queryFullString = [...queryParams, `majorDimension=COLUMNS`, `key=${API_KEY}`].join('&');
+
+    const url = BASE_URL + queryFullString;
+
+    const response = await axios.get(url, {
+      timeout: 10000,
+      headers: {
+        'Accept': 'text/csv'
+      }
+    })
+
+    const finalData = response.data.valueRanges;
+
+    let i = 0;
+    const teamsData = [];
+
+    while (i < finalData.length) {
+
+      const teamScore = finalData?.[i]?.values?.[0] ?? 0;
+      i += 1;
+      const teamMembers = finalData?.[i].values?.[0] ?? [];
+      i += 1;
+      const challenges1 = finalData?.[i].values?.[0]?.[0] ?? [];
+      i += 1;
+      const challenges2 = finalData?.[i].values?.[0]?.[0] ?? [];
+      i += 1;
+      const challenges = [...challenges1, ...challenges2];
+      const completedChallenges = challenges.filter(x => x.length > 0).length;
+      const gid = teamGids.shift();
+
+      teamsData.push({
+        teamName: teamNames.shift(),
+        members: teamMembers.filter(x => !x.startsWith('Team member')),
+        totalPoints: Number(teamScore),
+        completedChallenges,
+        link: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${gid}#gid=${gid}`
+      });
+    }
+    return teamsData;
     
   } catch (error) {
     console.error('Error fetching teams data:', error)
@@ -105,56 +145,6 @@ const getSheetMetadata = async () => {
 }
 
 /**
- * Fetch data for a single team from their sheet tab
- */
-const fetchSingleTeamData = async (teamConfig) => {
-  try {
-    // Use CSV export for the specific team sheet
-    // const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${teamConfig.gid}`;
-
-    const team = encodeURIComponent(teamConfig.name);
-    const scoreRange = `${team}!D83`;
-    const membersRange = `${team}!K3:K6`;
-    const mainChallenges = `${team}!D7:D39`;
-    const xtraChallenges = `${team}!D46:D81`;
-
-    const CSV_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?` +
-      `ranges=${scoreRange}&` +
-      `ranges=${membersRange}&` +
-      `ranges=${mainChallenges}&` +
-      `ranges=${xtraChallenges}&` +
-      `majorDimension=COLUMNS&` +
-      `key=${API_KEY}`;
-
-    const response = await axios.get(CSV_URL, {
-      timeout: 10000,
-      headers: {
-        'Accept': 'text/csv'
-      }
-    })
-
-    const sheetData = response.data.valueRanges;
-    const teamScore = sheetData?.[0]?.values?.[0] ?? 0;
-    const teamMembers = sheetData?.[1].values?.[0] ?? [];
-    const challenges1 = sheetData?.[2].values?.[0]?.[0] ?? [];
-    const challenges2 = sheetData?.[3].values?.[0]?.[0] ?? [];
-    const challenges = [...challenges1, ...challenges2];
-    const completedChallenges = challenges.filter(x => x.length > 0).length;
-
-    return {
-      teamName: teamConfig.name,
-      members: teamMembers.filter(x => !x.startsWith('Team member')),
-      totalPoints: Number(teamScore),
-      completedChallenges
-    };
-        
-  } catch (error) {
-    console.error(`Error fetching team data for ${teamConfig.name}:`, error)
-    return null
-  }
-}
-
-/**
  * Parse CSV data into structured format for challenges
  */
 const parseCSVData = (csvText) => {
@@ -185,7 +175,7 @@ const parseCSVData = (csvText) => {
     const fields = parseCSVLine(line)
     
     if (fields.length >= 6) {
-      const [challenge, description, points, , notes, link] = fields
+      const [challenge, description, points, , notes, , , stravaLink] = fields
       
       // Skip empty or header rows
       if (!challenge || challenge.toLowerCase().includes('thing') || 
@@ -210,7 +200,7 @@ const parseCSVData = (csvText) => {
         points: parseInt(points) || 0,
         category: category,
         notes: notes?.trim() || '',
-        stravaLink: link?.trim() || '-'
+        link: stravaLink?.trim() || '-'
       }
       
       if (item.teamName && item.teamName !== '-') {

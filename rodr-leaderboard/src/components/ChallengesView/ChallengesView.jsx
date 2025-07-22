@@ -72,11 +72,8 @@ const ChallengesView = () => {
 
       <div className={styles.tableHeader}>
         <div className={styles.rank}>Rank</div>
-        <div className={styles.challengeName}>Challenge</div>
-        <div className={styles.category}>Category</div>
+        <div className={styles.challengeName}>Challenge Info</div>
         <div className={styles.points}>Points</div>
-        <div className={styles.description}>Description</div>
-        <div className={styles.link}>Strava Link</div>
       </div>
 
       <div className={styles.list}>

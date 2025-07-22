@@ -25,72 +25,33 @@ const LeaderboardItem = ({ item, rank }) => {
         {rank <= 3 && <span className={styles.medal}>🏆</span>}
       </div>
       
-      <div className={styles.teamName}>
-        <span className={styles.name}>{item.teamName || 'Unknown Team'}</span>
+      <div className={styles.challengeInfo}>
+        <div className={styles.teamName}>
+          <span className={styles.name}>{item.teamName || 'Unknown Team'}</span>
+        </div>
+        
+        <div className={styles.categoryRow}>
+          <span className={styles.categoryBadge}>{item.category || 'General'}</span>
+          {item.link && item.link !== '-' && (
+            <button
+              onClick={() => handleStravaClick(item.link)}
+              className={styles.stravaButton}
+              title="More info"
+            >
+              <span className={styles.stravaIcon}>🔗</span>
+              More Info
+            </button>
+          )}
+        </div>
+        
+        <div className={styles.description}>
+          <p className={styles.descriptionText}>{item.description || 'No description available'}</p>
+        </div>
       </div>
-      
-      <div className={styles.category}>
-        <span className={styles.categoryBadge}>{item.category || 'General'}</span>
-      </div>
-      
+        
       <div className={styles.points}>
         <span className={styles.pointsValue}>{formatPoints(item.points)}</span>
         <span className={styles.pointsLabel}>pts</span>
-      </div>
-      
-      <div className={styles.description}>
-        <p className={styles.descriptionText}>{item.description || 'No description available'}</p>
-      </div>
-      
-      <div className={styles.link}>
-        {item.stravaLink && item.stravaLink !== '-' ? (
-          <button 
-            onClick={() => handleStravaClick(item.stravaLink)}
-            className={styles.stravaButton}
-            title="View on Strava"
-          >
-            <span className={styles.stravaIcon}>🏃</span>
-            Strava
-          </button>
-        ) : (
-          <span className={styles.noLink}>-</span>
-        )}
-      </div>
-
-      {/* Mobile layout */}
-      <div className={styles.mobileLayout}>
-        <div className={styles.mobileHeader}>
-          <div className={styles.mobileRank}>
-            #{rank} {rank <= 3 && '🏆'}
-          </div>
-          <div className={styles.mobilePoints}>
-            {formatPoints(item.points)} pts
-          </div>
-        </div>
-        
-        <div className={styles.mobileTeam}>
-          {item.teamName || 'Unknown Team'}
-        </div>
-        
-        <div className={styles.mobileCategory}>
-          <span className={styles.categoryBadge}>{item.category || 'General'}</span>
-        </div>
-        
-        <div className={styles.mobileDescription}>
-          {item.description || 'No description available'}
-        </div>
-        
-        {item.stravaLink && item.stravaLink !== '-' && (
-          <div className={styles.mobileStrava}>
-            <button 
-              onClick={() => handleStravaClick(item.stravaLink)}
-              className={styles.stravaButton}
-            >
-              <span className={styles.stravaIcon}>🏃</span>
-              View on Strava
-            </button>
-          </div>
-        )}
       </div>
     </div>
   )
