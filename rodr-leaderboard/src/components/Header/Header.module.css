@@ -1,21 +1,11 @@
 .header {
   background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
   color: white;
-  padding: 2rem 0;
+  padding: 1.25rem 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
-}
-
-.header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-  pointer-events: none;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .container {
@@ -33,17 +23,37 @@
   text-align: left;
 }
 
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   letter-spacing: 2px;
+  font-family: "Barrio", system-ui;
 }
 
 .subtitle {
-  font-size: 1.2rem;
-  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+  margin: 0.25rem 0 0 0;
   opacity: 0.9;
   font-style: italic;
 }
@@ -53,16 +63,17 @@
 }
 
 .challengeTitle {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   margin: 0;
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: "Barrio", system-ui;
 }
 
 .challengeDates {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
+  font-size: 1rem;
+  margin: 0.25rem 0 0 0;
   opacity: 0.9;
   font-weight: 500;
 }
@@ -76,37 +87,72 @@
 }
 
 @media (max-width: 768px) {
+  .header {
+    padding: 1rem 0;
+  }
+
   .container {
     flex-direction: column;
     text-align: center;
-    gap: 1.5rem;
+    gap: 1rem;
   }
   
   .logoSection,
   .challengeInfo {
     text-align: center;
   }
-  
-  .title {
-    font-size: 2.5rem;
-  }
-  
-  .challengeTitle {
-    font-size: 1.8rem;
-  }
-  
-  .challengeDescription {
-    max-width: none;
-  }
-}
 
-@media (max-width: 480px) {
+  .logoContainer {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  
   .title {
-    font-size: 2rem;
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
   }
   
   .challengeTitle {
     font-size: 1.5rem;
+  }
+
+  .challengeDates {
+    font-size: 0.9rem;
+  }
+  
+  .challengeDescription {
+    max-width: none;
+    display: none; /* Hide description on mobile to save space */
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.75rem 0;
+  }
+
+  .container {
+    gap: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .challengeTitle {
+    font-size: 1.75rem;
+  }
+
+  .challengeDates {
+    font-size: 0.85rem;
   }
   
   .container {

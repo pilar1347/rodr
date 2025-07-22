@@ -8,18 +8,9 @@ const TeamItem = ({ team, rank }) => {
     return ''
   }
 
-  // Generate Google Sheets URL for the team's sheet
-  const getTeamSheetUrl = (teamName) => {
-    const SHEET_ID = '1tE08TsZa66RmZgkuQV77FTVNRTwXY56BJ7MEscW5AZw'
-    // Encode the team name for URL
-    const encodedTeamName = encodeURIComponent(teamName)
-    return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=0&range=${encodedTeamName}!A1`
-  }
-
   const handleTeamClick = () => {
     if (team.teamName) {
-      const url = getTeamSheetUrl(team.teamName)
-      window.open(url, '_blank', 'noopener,noreferrer')
+      window.open(team.link, '_blank', 'noopener,noreferrer')
     }
   }
 
@@ -51,11 +42,11 @@ const TeamItem = ({ team, rank }) => {
             {team.members ? team.members.join(' - ') : 'No members listed'}
           </span>
         </div>
+      </div>
         
-        <div className={styles.points}>
-          <span className={styles.pointsValue}>{team.totalPoints || 0}</span>
-          <span className={styles.pointsLabel}>pts</span>
-        </div>
+      <div className={styles.points}>
+        <span className={styles.pointsValue}>{team.totalPoints || 0}</span>
+        <span className={styles.pointsLabel}>pts</span>
       </div>
 
     </div>
